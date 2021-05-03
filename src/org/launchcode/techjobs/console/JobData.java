@@ -1,15 +1,15 @@
 package org.launchcode.techjobs.console;
 
+import com.sun.jdi.Value;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
+import javax.xml.validation.Validator;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -62,7 +62,7 @@ public class JobData {
      * with "Enterprise Holdings, Inc".
      *
      * @param column   Column that should be searched.
-     * @param value Value of teh field to search for
+     * @param value Value of the field to search for
      * @return List of all jobs matching the criteria
      */
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
@@ -75,8 +75,9 @@ public class JobData {
         for (HashMap<String, String> row : allJobs) {
 
             String aValue = row.get(column);
-
-            if (aValue.contains(value)) {
+            String newAValue = aValue.toLowerCase();
+            String newValue = value.toLowerCase();
+            if (newAValue.contains(newValue)) {
                 jobs.add(row);
             }
         }
@@ -124,5 +125,28 @@ public class JobData {
             e.printStackTrace();
         }
     }
+    public static void findByValue(String searchTerm) {
+        loadData();
+        String newSearch = searchTerm.toLowerCase();
+        ArrayList<HashMap<String, String>> allValueJobs = new ArrayList<>();
+        for (HashMap<String, String> allJob : allJobs) {
+            for (String key : allJob.keySet()) {
+                String value = allJob.get(key);
+                String newValue = value.toLowerCase();
+                if (newValue.contains(newSearch)) {
+                    allValueJobs.add(allJob);
+                    break;
+                }
+            }
 
+        }
+        for (HashMap<String, String> entry : allValueJobs) {
+            System.out.println("*****");
+            for (String key : entry.keySet()) {
+                String value = entry.get(key);
+                System.out.println(key + " : " + value);
+            }
+            System.out.println("*****" + System.lineSeparator());
+        }
+    }
 }
